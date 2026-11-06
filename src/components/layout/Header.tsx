@@ -41,6 +41,7 @@ export default function Header({
 
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
+    document.body.style.overflow = open ? "hidden" : "";
     if (open) window.__lenis?.stop();
     else window.__lenis?.start();
     const onKey = (e: KeyboardEvent) => {
@@ -53,8 +54,17 @@ export default function Header({
     return () => {
       window.removeEventListener("keydown", onKey);
       document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
     };
   }, [open]);
+
+  // Menü schliessen, wenn auf Desktop-Breite gewechselt wird (z. B. Handy drehen / Fenster vergrössern)
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1280px)");
+    const onChange = () => mq.matches && setOpen(false);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   const other: Locale = lang === "de" ? "en" : "de";
   const switchHref = switchLocalePath(pathname, other);
@@ -134,7 +144,7 @@ export default function Header({
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <span className={cn("transition-opacity duration-300", open && "pointer-events-none opacity-0")}>
+            <span className={cn(open && "hidden")}>
               <ThemeCycle labels={theme} />
             </span>
             <Link

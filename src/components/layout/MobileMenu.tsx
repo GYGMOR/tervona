@@ -50,19 +50,21 @@ export default function MobileMenu({
       aria-modal="true"
       aria-label={t.menu}
       data-lenis-prevent
-      className="fixed inset-0 overflow-y-auto overscroll-contain bg-night text-white xl:hidden"
+      className="fixed inset-0 overflow-y-auto overflow-x-hidden overscroll-contain bg-night text-white xl:hidden"
       initial={{ clipPath: `circle(0% at ${origin})` }}
       animate={{ clipPath: `circle(150% at ${origin})` }}
       exit={{ clipPath: `circle(0% at ${origin})` }}
       transition={{ duration: 0.75, ease }}
     >
-      <div
-        aria-hidden="true"
-        className="animate-glow pointer-events-none absolute left-1/2 top-[85%] h-[34rem] w-[34rem] rounded-full opacity-40 blur-[110px]"
-        style={{ background: "conic-gradient(from 0deg, #2997ff, #6f6bff, #b45cff, #ff6a8d, #2997ff)" }}
-      />
+      {/* Farbschein in eigener, fixierter Ebene – kann nie seitlich überstehen */}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div
+          className="animate-glow absolute left-1/2 top-[88%] h-[min(34rem,120vw)] w-[min(34rem,120vw)] rounded-full opacity-40 blur-[100px]"
+          style={{ background: "conic-gradient(from 0deg, #2997ff, #6f6bff, #b45cff, #ff6a8d, #2997ff)" }}
+        />
+      </div>
 
-      <div className="container-x relative flex min-h-full flex-col pb-8 pt-24">
+      <div className="container-x relative flex min-h-full flex-col pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-20 sm:pt-24">
         <nav aria-label="Mobile Navigation">
           <ul className="border-t border-white/10">
             {links.map((l, i) => {
@@ -75,12 +77,17 @@ export default function MobileMenu({
                     exit={{ y: "-40%", opacity: 0, transition: { duration: 0.25 } }}
                     transition={{ duration: 0.7, delay: 0.22 + i * 0.05, ease: out }}
                   >
-                    <Link href={l.href} onClick={onNavigate} aria-current={active ? "page" : undefined} className="group flex items-center justify-between gap-4 py-3.5">
-                      <span className="flex items-baseline gap-4">
-                        <span className="text-gradient w-6 text-xs font-bold">0{i + 1}</span>
-                        <span className={cn("text-[2.05rem] font-bold leading-none tracking-[-0.045em] sm:text-5xl", active && "text-gradient")}>{l.label}</span>
+                    <Link
+                      href={l.href}
+                      onClick={onNavigate}
+                      aria-current={active ? "page" : undefined}
+                      className="group flex min-w-0 items-center justify-between gap-3 py-[clamp(0.6rem,1.7svh,0.95rem)]"
+                    >
+                      <span className="flex min-w-0 items-baseline gap-3 sm:gap-4">
+                        <span className="text-gradient w-5 shrink-0 text-[0.7rem] font-bold sm:w-6">0{i + 1}</span>
+                        <span className={cn("truncate text-[clamp(1.6rem,7.6vw,3rem)] font-bold leading-[1.1] tracking-[-0.045em]", active && "text-gradient")}>{l.label}</span>
                       </span>
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/[0.08] transition-all duration-300 group-hover:bg-white group-hover:text-[#1d1d1f] group-active:scale-90">
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/[0.08] transition-all duration-300 group-hover:bg-white group-hover:text-[#1d1d1f] group-active:scale-90 sm:h-10 sm:w-10">
                         <Chevron />
                       </span>
                     </Link>
@@ -96,7 +103,7 @@ export default function MobileMenu({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
           transition={{ duration: 0.7, delay: 0.5, ease: out }}
-          className="mt-8"
+          className="mt-6 sm:mt-8"
         >
           <p className="text-sm font-semibold text-night-soft">{t.services}</p>
           <div className="no-scrollbar -mx-[clamp(1.25rem,4vw,2.75rem)] mt-3 flex snap-x snap-mandatory scroll-px-[clamp(1.25rem,4vw,2.75rem)] gap-3 overflow-x-auto px-[clamp(1.25rem,4vw,2.75rem)] pb-1">
@@ -105,7 +112,7 @@ export default function MobileMenu({
                 key={s.slug}
                 href={localePath(lang, `services/${s.slug}`)}
                 onClick={onNavigate}
-                className="group relative h-36 w-[62vw] max-w-[270px] shrink-0 snap-start overflow-hidden rounded-[20px] bg-night-3"
+                className="group relative h-28 w-[60vw] max-w-[270px] shrink-0 snap-start overflow-hidden rounded-[18px] bg-night-3 sm:h-36 sm:rounded-[20px]"
               >
                 <Photo photo={s.image} alt="" sizes="270px" className="transition-transform duration-700 group-hover:scale-105" />
                 <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -123,7 +130,7 @@ export default function MobileMenu({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
           transition={{ duration: 0.7, delay: 0.6, ease: out }}
-          className="mt-auto space-y-3 pt-10"
+          className="mt-auto space-y-3 pt-8"
         >
           <ButtonLink href={localePath(lang, "contact")} size="lg" className="w-full">
             {t.cta}
