@@ -1,0 +1,419 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Trevona – Designsystem
+   Apple-Klarheit (Weiss / #f5f5f7 / Schwarz, grosse Headlines, Bento)
+   + Microsoft Fluent (Glas, Tiefe, Licht, das dem Cursor folgt).
+------------------------------------------------------------------- */
+
+@theme {
+  --color-surface: #ffffff;
+  --color-card: #ffffff;
+  --color-canvas: #fbfbfd;
+  --color-mist: #f5f5f7;
+  --color-ink: #1d1d1f;
+  --color-ink-soft: #6e6e73;
+  --color-ink-mute: #86868b;
+  --color-line: #d2d2d7;
+  --color-night: #000000;
+  --color-night-2: #0f0f11;
+  --color-night-3: #1c1c1e;
+  --color-night-soft: #a1a1a6;
+  --color-blue: #0071e3;
+  --color-blue-hover: #0077ed;
+  --color-link: #0066cc;
+  --color-link-dark: #2997ff;
+
+  --ease-apple: cubic-bezier(0.28, 0.11, 0.32, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-glow: glow 14s ease-in-out infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes glow {
+    0%,
+    100% {
+      transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+    50% {
+      transform: translate(-50%, -50%) rotate(180deg) scale(1.12);
+    }
+  }
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+}
+
+:root {
+  /* Trevona-Verlauf: Blau → Indigo → Violett → Rosé */
+  --grad: linear-gradient(92deg, #2997ff 0%, #6f6bff 38%, #b45cff 68%, #ff6a8d 100%);
+  --glass-bg: rgb(251 251 253 / 0.72);
+  --glass-border: rgb(255 255 255 / 0.65);
+  --glow-opacity: 0.13;
+  color-scheme: light;
+}
+
+/* Dunkelmodus: folgt dem System, ausser der Besucher wählt selbst (data-theme) */
+:root[data-theme="dark"] {
+  --color-surface: #000000;
+  --color-card: #1c1c1e;
+  --color-canvas: #0a0a0b;
+  --color-mist: #141416;
+  --color-ink: #f5f5f7;
+  --color-ink-soft: #a1a1a6;
+  --color-ink-mute: #8e8e93;
+  --color-line: #2c2c2e;
+  --color-night: #0c0c0e;
+  --color-night-3: #1c1c1e;
+  --color-link: #2997ff;
+  --glass-bg: rgb(22 22 23 / 0.72);
+  --glass-border: rgb(255 255 255 / 0.1);
+  --glow-opacity: 0.22;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-surface: #000000;
+    --color-card: #1c1c1e;
+    --color-canvas: #0a0a0b;
+    --color-mist: #141416;
+    --color-ink: #f5f5f7;
+    --color-ink-soft: #a1a1a6;
+    --color-ink-mute: #8e8e93;
+    --color-line: #2c2c2e;
+    --color-night: #0c0c0e;
+    --color-night-3: #1c1c1e;
+    --color-link: #2997ff;
+    --glass-bg: rgb(22 22 23 / 0.72);
+    --glass-border: rgb(255 255 255 / 0.1);
+    --glow-opacity: 0.22;
+    color-scheme: dark;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 4.5rem;
+  }
+  body {
+    background: var(--color-surface);
+    transition: background-color 0.4s ease;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    font-size: 1.0625rem;
+    line-height: 1.47;
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: #b9d7ff;
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  button {
+    cursor: pointer;
+  }
+}
+
+/* Raster ----------------------------------------------------------- */
+@utility container-x {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.75rem);
+}
+
+/* Typografie (Apple-Massstab) ---------------------------------------- */
+@utility t-hero {
+  font-size: clamp(3.1rem, 8.4vw, 7.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.048em;
+  font-weight: 700;
+}
+@utility t-h1 {
+  font-size: clamp(2.7rem, 6.2vw, 5.75rem);
+  line-height: 1.04;
+  letter-spacing: -0.044em;
+  font-weight: 700;
+}
+@utility t-h2 {
+  font-size: clamp(2.25rem, 4.8vw, 4.5rem);
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+}
+@utility t-h3 {
+  font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.032em;
+  font-weight: 700;
+}
+@utility t-lead {
+  font-size: clamp(1.15rem, 1.6vw, 1.5rem);
+  line-height: 1.4;
+  letter-spacing: -0.018em;
+  font-weight: 500;
+}
+@utility t-eyebrow {
+  font-size: clamp(1.02rem, 1.3vw, 1.3rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+@utility t-statement {
+  font-size: clamp(2rem, 4.6vw, 4.4rem);
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+}
+
+/* Verlaufstext */
+@utility text-gradient {
+  background-image: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+@utility bg-brand {
+  background-image: var(--grad);
+}
+
+/* Fluent-Glas (Acrylic) */
+@utility glass {
+  background: var(--glass-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+@utility glass-dark {
+  background: rgb(22 22 23 / 0.66);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* Fluent «Reveal»: Licht folgt dem Cursor (Variablen via JS) */
+.reveal-light {
+  --mx: 50%;
+  --my: 50%;
+}
+.reveal-light::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background: radial-gradient(520px circle at var(--mx) var(--my), rgb(255 255 255 / 0.1), transparent 42%);
+}
+.reveal-light.on-light::after {
+  background: radial-gradient(520px circle at var(--mx) var(--my), rgb(41 151 255 / 0.1), transparent 42%);
+}
+.reveal-light:hover::after {
+  opacity: 1;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Logo: Kacheln heben sich beim Überfahren nacheinander an */
+.logo-mark rect {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.group\/logo:hover .logo-mark rect:nth-child(2) {
+  transform: translateY(-2px);
+}
+.group\/logo:hover .logo-mark rect:nth-child(3) {
+  transform: translateY(-2px);
+  transition-delay: 0.05s;
+}
+.group\/logo:hover .logo-mark rect:nth-child(4) {
+  transform: translateY(-2px);
+  transition-delay: 0.1s;
+}
+.group\/logo:hover .logo-mark rect:nth-child(5) {
+  transform: translateY(2px) rotate(90deg);
+  transition-delay: 0.15s;
+}
+
+/* Intro: Logo-Enthüllung beim ersten Besuch (reines CSS, läuft auch ohne JS ab) */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  background: var(--color-surface);
+  pointer-events: none;
+  animation: intro-out 0.8s cubic-bezier(0.76, 0, 0.24, 1) 1.45s forwards;
+}
+html[data-intro="seen"] .intro {
+  display: none;
+}
+.intro-tile {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: intro-tile 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.intro-tile:nth-of-type(1) {
+  --from: translate(-14px, -10px) scale(0.3) rotate(-25deg);
+  animation-delay: 0.05s;
+}
+.intro-tile:nth-of-type(2) {
+  --from: translate(0, -16px) scale(0.3) rotate(20deg);
+  animation-delay: 0.13s;
+}
+.intro-tile:nth-of-type(3) {
+  --from: translate(14px, -10px) scale(0.3) rotate(-20deg);
+  animation-delay: 0.21s;
+}
+.intro-tile:nth-of-type(4) {
+  --from: translate(0, 16px) scale(0.3) rotate(30deg);
+  animation-delay: 0.29s;
+}
+.intro-word {
+  opacity: 0;
+  animation: intro-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+}
+.intro-slogan {
+  opacity: 0;
+  animation: intro-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.65s forwards;
+}
+@keyframes intro-tile {
+  from {
+    opacity: 0;
+    transform: var(--from);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes intro-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+@keyframes intro-out {
+  to {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+
+/* Rechtstexte */
+.legal h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+.legal p,
+.legal li {
+  color: var(--color-ink-soft);
+  line-height: 1.7;
+}
+.legal p + p {
+  margin-top: 0.75rem;
+}
+.legal ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin-top: 0.5rem;
+}
+.legal a {
+  color: var(--color-link);
+}
+.legal a:hover {
+  text-decoration: underline;
+}
+
+/* Glas-Cursor: über markierten Bildern den Systemcursor ausblenden */
+@media (pointer: fine) {
+  [data-cursor] {
+    cursor: none;
+  }
+  [data-cursor] a,
+  [data-cursor] button {
+    cursor: none;
+  }
+}
+
+/* Lenis (weiches Scrollen) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* View Transitions: Seitenwechsel & Morph */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-group(.morph) {
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: via-blur;
+}
+@keyframes via-blur {
+  30% {
+    filter: blur(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
+  .animate-marquee,
+  .animate-glow {
+    animation: none !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
