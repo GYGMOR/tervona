@@ -42,27 +42,46 @@ export default function MobileMenu({
   onNavigate: () => void;
   switchHref: string;
 }) {
-  const origin = "calc(100% - 4rem) 1.75rem";
   return (
     <motion.div
       id="mobile-menu"
       role="dialog"
       aria-modal="true"
       aria-label={t.menu}
-      data-lenis-prevent
-      className="fixed inset-0 overflow-y-auto overflow-x-hidden overscroll-contain bg-night text-white xl:hidden"
-      initial={{ clipPath: `circle(0% at ${origin})` }}
-      animate={{ clipPath: `circle(150% at ${origin})` }}
-      exit={{ clipPath: `circle(0% at ${origin})` }}
-      transition={{ duration: 0.75, ease }}
+      className="fixed inset-0 overflow-hidden xl:hidden"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 1, transition: { duration: 0.6 } }}
     >
-      {/* Farbschein in eigener, fixierter Ebene – kann nie seitlich überstehen */}
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
+      {/*
+        Kreis-Öffnung nur über transform: scale → läuft auf dem Grafikchip,
+        dadurch auch auf Handys flüssig (statt clip-path, das jedes Bild neu zeichnet).
+      */}
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute rounded-full bg-night will-change-transform"
+        style={{ width: "240vmax", height: "240vmax", right: "calc(4rem - 120vmax)", top: "calc(1.75rem - 120vmax)" }}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0, transition: { duration: 0.5, delay: 0.08, ease } }}
+        transition={{ duration: 0.6, ease }}
+      />
+
+      <motion.div
+        data-lenis-prevent
+        className="absolute inset-0 overflow-y-auto overflow-x-hidden overscroll-contain text-white"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: { duration: 0.3, delay: 0.1 } }}
+        exit={{ opacity: 0, transition: { duration: 0.18 } }}
+      >
+        {/* Farbschein als reiner Verlauf (kein Weichzeichner-Filter, keine Daueranimation) */}
         <div
-          className="animate-glow absolute left-1/2 top-[88%] h-[min(34rem,120vw)] w-[min(34rem,120vw)] rounded-full opacity-40 blur-[100px]"
-          style={{ background: "conic-gradient(from 0deg, #2997ff, #6f6bff, #b45cff, #ff6a8d, #2997ff)" }}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%]"
+          style={{
+            background:
+              "radial-gradient(60% 50% at 50% 100%, rgba(111,107,255,0.32), transparent 70%), radial-gradient(45% 40% at 90% 95%, rgba(255,106,141,0.2), transparent 70%), radial-gradient(45% 45% at 10% 100%, rgba(41,151,255,0.22), transparent 70%)",
+          }}
         />
-      </div>
 
       <div className="container-x relative flex min-h-full flex-col pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-20 sm:pt-24">
         <nav aria-label="Mobile Navigation">
@@ -75,7 +94,7 @@ export default function MobileMenu({
                     initial={{ y: "100%", opacity: 0 }}
                     animate={{ y: "0%", opacity: 1 }}
                     exit={{ y: "-40%", opacity: 0, transition: { duration: 0.25 } }}
-                    transition={{ duration: 0.7, delay: 0.22 + i * 0.05, ease: out }}
+                    transition={{ duration: 0.6, delay: 0.14 + i * 0.04, ease: out }}
                   >
                     <Link
                       href={l.href}
@@ -102,7 +121,7 @@ export default function MobileMenu({
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
-          transition={{ duration: 0.7, delay: 0.5, ease: out }}
+          transition={{ duration: 0.6, delay: 0.36, ease: out }}
           className="mt-6 sm:mt-8"
         >
           <p className="text-sm font-semibold text-night-soft">{t.services}</p>
@@ -129,7 +148,7 @@ export default function MobileMenu({
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
-          transition={{ duration: 0.7, delay: 0.6, ease: out }}
+          transition={{ duration: 0.6, delay: 0.44, ease: out }}
           className="mt-auto space-y-3 pt-8"
         >
           <ButtonLink href={localePath(lang, "contact")} size="lg" className="w-full">
@@ -162,6 +181,7 @@ export default function MobileMenu({
           </div>
         </motion.div>
       </div>
+      </motion.div>
     </motion.div>
   );
 }

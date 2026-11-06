@@ -111,7 +111,7 @@ export default function Header({
       <div
         className={cn(
           "relative z-10 border-b transition-[background-color,border-color] duration-500",
-          open ? "border-white/[0.06] bg-night/70 backdrop-blur-xl" : "glass",
+          open ? "border-white/[0.06] bg-night/90 delay-200" : "glass",
           !open && (scrolled || mega ? "border-ink/[0.08]" : "border-transparent"),
         )}
       >
